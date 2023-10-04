@@ -1,1 +1,1 @@
-# piriama
+# pirama

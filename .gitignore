@@ -1,0 +1,13 @@
+# bytes
+__pycache__
+# pkgs
+.eggs/
+dist/
+wheels/
+.egg
+
+# jupyter
+.ipynb_checkpoints
+
+# environments
+.venv
