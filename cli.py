@@ -20,9 +20,37 @@ import mlflow
 logger = logging.getLogger('pirama')
 logging.basicConfig(level=logging.DEBUG)
 
+client = mlflow.tracking.MlflowClient()
+
+
+def create_run(src=None, exid=None):
+    logger.debug(f'creating new run in experiment {exid} starting from run {src}')
+    # Create a new run in the destination experiment
+    dest_run = client.create_run(exid)
+    # Log parameters, metrics, and tags
+    for key, value in src.data.params.items():
+        client.log_param(dest_run.info.run_id, key, value)
+
+    for key, value in src.data.metrics.items():
+        client.log_metric(dest_run.info.run_id, key, value)
+
+    for key, value in src.data.tags.items():
+        client.set_tag(dest_run.info.run_id, key, value)
+
+    logger.info(f'created new run as {dest_run}')
+
+
+def read_run(runid: str):
+    logger.debug(f'reading run {runid}')
+    run = client.get_run(runid)
+    logger.info(f'fetched data from run {run}')
+    return run
+
+
 
 def main():
-    pass
+    args = docopt.docopt(__doc__)
+    read_run(args['--run'])
 
 if __name__ == '__main__':
     main()
